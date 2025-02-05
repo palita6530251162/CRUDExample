@@ -24,6 +24,21 @@ class MainActivity : AppCompatActivity() {
         val pagerAdapter = LibraryPagerAdapter(this)
         viewPager.adapter = pagerAdapter
 
+        // Add page change callback
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                // When BookFragment (position 1) is selected
+                if (position == 1) {
+                    // Find the BookFragment and refresh its data
+                    val fragment = supportFragmentManager.findFragmentByTag("f1")
+                    if (fragment is BookFragment) {
+                        fragment.refreshAuthorData()
+                    }
+                }
+            }
+        })
+
         // Connect TabLayout with ViewPager2
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = when (position) {

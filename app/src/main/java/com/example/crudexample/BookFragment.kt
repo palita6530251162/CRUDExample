@@ -42,10 +42,45 @@ class BookFragment : Fragment() {
         repository = LibraryRepository(database)
 
         setupRecyclerView()
+        loadAuthors()
         setupSpinner()
         setupClickListeners()
         loadBooks()
-        loadAuthors()
+    }
+
+    // Add this function to refresh author data
+    fun refreshAuthorData() {
+        lifecycleScope.launch {
+            try {
+                // Reload authors for spinner
+                val authors = repository.getAllAuthors()
+                val authorAdapter = ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_spinner_item,
+                    authors.map { it.name }
+                )
+                authorAdapter.setDropDownViewResource(
+                    android.R.layout.simple_spinner_dropdown_item
+                )
+                binding.authorSpinner.adapter = authorAdapter
+
+                // Also refresh books to get updated author information
+                loadBooks()
+            } catch (e: Exception) {
+                Toast.makeText(
+                    context,
+                    "Error refreshing data",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    // Add this function to handle visibility changes
+    override fun onResume() {
+        super.onResume()
+        // Refresh when fragment becomes visible
+        refreshAuthorData()
     }
 
     private fun setupRecyclerView() {
