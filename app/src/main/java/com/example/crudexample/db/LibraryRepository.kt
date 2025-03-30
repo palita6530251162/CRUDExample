@@ -1,6 +1,7 @@
 package com.example.crudexample.db
 
 class LibraryRepository(private val database: LibraryDatabase) {
+
     // Author operations
     suspend fun insertAuthor(name: String, email: String): Long {
         val author = Author(name = name, email = email)
@@ -20,8 +21,22 @@ class LibraryRepository(private val database: LibraryDatabase) {
     }
 
     // Book operations
-    suspend fun insertBook(title: String, publishYear: Int, authorId: Long): Long {
-        val book = Book(title = title, publishYear = publishYear, authorId = authorId)
+    suspend fun insertBook(
+        title: String,
+        publishYear: Int,
+        isbn: String,
+        purchaseDate: String,
+        notes: String?,
+        authorId: Long
+    ): Long {
+        val book = Book(
+            title = title,
+            publishYear = publishYear,
+            isbn = isbn,
+            purchaseDate = purchaseDate,
+            notes = notes,
+            authorId = authorId
+        )
         return database.bookDao().insertBook(book)
     }
 

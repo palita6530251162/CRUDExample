@@ -111,12 +111,18 @@ class BookFragment : Fragment() {
         binding.addBookButton.setOnClickListener {
             val title = binding.bookTitleInput.text.toString()
             val yearStr = binding.publishYearInput.text.toString()
+            val isbn = binding.bookIsbnInput.text.toString()
+            val purchaseDate = binding.bookPurchaseDateInput.text.toString()
+            val notes = binding.bookNotesInput.text.toString()
             val authorPosition = binding.authorSpinner.selectedItemPosition
 
-            if (title.isNotBlank() && yearStr.isNotBlank() && authorPosition != -1) {
+            if (title.isNotBlank() && yearStr.isNotBlank() && isbn.isNotBlank()
+                && purchaseDate.isNotBlank() && authorPosition != -1
+            ) {
                 val year = yearStr.toIntOrNull()
                 if (year != null) {
-                    addBook(title, year, authors[authorPosition].authorId)
+                    val authorId = authors[authorPosition].authorId
+                    addBook(title, year, isbn, purchaseDate, notes, authorId)
                     clearInputs()
                 } else {
                     Toast.makeText(context, "Invalid year", Toast.LENGTH_SHORT).show()
@@ -127,21 +133,34 @@ class BookFragment : Fragment() {
         }
     }
 
+
     private fun clearInputs() {
         binding.bookTitleInput.text?.clear()
         binding.publishYearInput.text?.clear()
+        binding.bookIsbnInput.text?.clear()
+        binding.bookPurchaseDateInput.text?.clear()
+        binding.bookNotesInput.text?.clear()
     }
 
-    private fun addBook(title: String, year: Int, authorId: Long) {
+
+    private fun addBook(
+        title: String,
+        year: Int,
+        isbn: String,
+        purchaseDate: String,
+        notes: String?,
+        authorId: Long
+    ) {
         lifecycleScope.launch {
             try {
-                repository.insertBook(title, year, authorId)
+                repository.insertBook(title, year, isbn, purchaseDate, notes, authorId)
                 loadBooks()
             } catch (e: Exception) {
                 Toast.makeText(context, "Error adding book", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
 
     private fun deleteBook(book: Book) {
         lifecycleScope.launch {

@@ -30,8 +30,12 @@ data class Book(
     val bookId: Long = 0,
     val title: String,
     val publishYear: Int,
-    val authorId: Long
-)
+    val isbn: String,
+    val purchaseDate: String,
+    val notes: String?,
+    val authorId: Long,
+
+    )
 
 data class AuthorWithBooks(
     @Embedded val author: Author,

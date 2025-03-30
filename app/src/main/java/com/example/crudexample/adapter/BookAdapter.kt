@@ -32,7 +32,10 @@ class BookAdapter(
 
         fun bind(book: Book) {
             binding.bookTitleText.text = book.title
+            binding.bookAuthorText.text = "Author: ${book.authorId}"
             binding.publishYearText.text = "Published: ${book.publishYear}"
+            binding.ISBNText2.text = "ISBN: ${book.isbn}"
+            binding.purchaseTEXT.text = "Purchase Date: ${book.purchaseDate}"
             binding.editBookButton.setOnClickListener { onEditClick(book) }
             binding.deleteBookButton.setOnClickListener { onDeleteClick(book) }
         }
